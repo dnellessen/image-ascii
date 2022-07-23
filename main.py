@@ -20,7 +20,19 @@ ASCII10 = ' .:-=+*#%@'
 ASCII70 = ' .\'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$'
 
 
-def write(ascii_list, path=os.path.expanduser("~/Desktop"), filename='result'):
+def write(ascii_list: list, path=os.path.expanduser("~/Desktop"), filename='result'):
+    '''
+    Write rows of ASCII list from image to txt file and try opening the file when done.
+
+    Parameters
+    ----------
+    ascii_list : list
+        The list of ASCII values.
+    path : str, default Desktop
+        The path where the file will be saved.
+    filename : str, default 'result'
+    '''
+
     with open(f'{path}/{filename}.txt', 'w') as file:
         for r in ascii_list:
             file.write(r)
@@ -29,14 +41,30 @@ def write(ascii_list, path=os.path.expanduser("~/Desktop"), filename='result'):
     os.system(f'open {path}/{filename}.txt')
 
 
-def ascii(img, ascii, columns):
+def ascii(img: Image, ascii: str, columns: int):
+    '''
+    Generate ASCII image and create the file.
+
+    Parameters
+    ----------
+    img: Image
+        The image to convert.
+    ascii: str
+        The ASCII characters to use (luminance).
+    columns: int
+        The number of columns to have in the output.
+    '''
 
     def average_luminance(tile):
+        ''' Get the average luminance of a tile. '''
+
         tile = np.array(tile)
         average = int(np.average([sum(c) for r in tile for c in r]))
         return average
 
     def divisor(ascii):
+        ''' Get the divisor to index from ASCII list. '''
+
         high = 255*3
         asciilen = len(ascii)
         div = None
@@ -82,6 +110,8 @@ def ascii(img, ascii, columns):
 
 
 def select():
+    ''' Select a file in GUI. '''
+
     global width, height, img, imagepath
 
     filetypes = (
@@ -115,6 +145,8 @@ def select():
 
 
 def create():
+    ''' Create ASCII image/file. '''
+
     threading.Thread(target=ascii, kwargs={'img': img, 'ascii': eval(
         f'ASCII{tk_combobox.get().split(" ")[0]}'), 'columns': int(tk_scale.get())}).start()
 
